@@ -3,6 +3,8 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using TMPro;
 
+// Particle全然ワークしてまへん
+
 public class LongPressHandler : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerExitHandler
 {
     [Header("Progress Settings")]
@@ -12,7 +14,7 @@ public class LongPressHandler : MonoBehaviour, IPointerDownHandler, IPointerUpHa
     [Header("Caption Settings")]
     [SerializeField] private GameObject captionPanel;
     [SerializeField] private TextMeshProUGUI captionText;
-    [SerializeField] private string caption = "写真の位置情報を確認します。撮影場所や日時などの詳細を表示します。";
+    [SerializeField] private string caption = "Hello World!";
     
     [Header("Particle Settings")] 
     [SerializeField] private ParticleSystem particleEffect;
@@ -23,19 +25,19 @@ public class LongPressHandler : MonoBehaviour, IPointerDownHandler, IPointerUpHa
     
     private void Start()
     {
-        // キャプションパネルは最初は非表示
+        // false caption
         if (captionPanel != null)
         {
             captionPanel.SetActive(false);
         }
         
-        // パーティクルシステムが存在すれば停止
+        // Stop Particle
         if (particleEffect != null)
         {
             particleEffect.Stop();
         }
         
-        // プログレスバーをゼロに初期化
+        // Progressbar reset
         if (progressMaterial != null)
         {
             progressMaterial.SetFloat("_Progress", 0f);
@@ -46,23 +48,19 @@ public class LongPressHandler : MonoBehaviour, IPointerDownHandler, IPointerUpHa
     {
         if (isPressed && !actionCompleted)
         {
-            // 長押し時間を更新
             pressTime += Time.deltaTime;
             float progress = Mathf.Clamp01(pressTime / requiredPressTime);
             
-            // プログレスバーの更新
             if (progressMaterial != null)
             {
                 progressMaterial.SetFloat("_Progress", progress);
             }
             
-            // パーティクル効果
             if (particleEffect != null && !particleEffect.isPlaying)
             {
                 particleEffect.Play();
             }
             
-            // 長押し完了
             if (progress >= 1.0f)
             {
                 OnLongPressComplete();
@@ -83,7 +81,7 @@ public class LongPressHandler : MonoBehaviour, IPointerDownHandler, IPointerUpHa
     {
         isPressed = false;
         
-        // 完了前に離したらリセット
+        // RESET BEFORE COMPLETED
         if (!actionCompleted)
         {
             ResetProgress();
@@ -94,7 +92,6 @@ public class LongPressHandler : MonoBehaviour, IPointerDownHandler, IPointerUpHa
     {
         isPressed = false;
         
-        // 完了前に離したらリセット
         if (!actionCompleted)
         {
             ResetProgress();
@@ -105,13 +102,11 @@ public class LongPressHandler : MonoBehaviour, IPointerDownHandler, IPointerUpHa
     {
         actionCompleted = true;
         
-        // パーティクル停止
         if (particleEffect != null)
         {
             particleEffect.Stop();
         }
         
-        // キャプション表示
         if (captionPanel != null)
         {
             captionPanel.SetActive(true);
