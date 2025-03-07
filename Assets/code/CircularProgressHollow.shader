@@ -81,15 +81,13 @@ Shader "UI/GlowingCircularRing"
             
             fixed4 frag (v2f i) : SV_Target
             {
-                // Center coordinates - ensure we're working with a perfect circle
                 float2 center = float2(0.5, 0.5);
                 float2 uv = i.uv - center;
                 
-                // Correct aspect ratio to ensure circle, not oval
                 float aspect = 1.0; // Set to _ScreenParams.x/_ScreenParams.y if needed for screen space
                 uv.x *= aspect;
                 
-                // Apply rotation - maintain perfect circle
+                // rotation
                 float rotation = _Time.y * _RotationSpeed;
                 float2 rotatedUV;
                 rotatedUV.x = uv.x * cos(rotation) - uv.y * sin(rotation);
@@ -104,12 +102,12 @@ Shader "UI/GlowingCircularRing"
                 float outerRadius = _OuterRadius * pulse;
                 float innerRadius = _InnerRadius * pulse;
                 
-                // Create base ring with perfect circular shape
+                // Create base ring with circular shape
                 float outerMask = smoothstep(outerRadius + _GlowSize, outerRadius - _GlowSize, dist);
                 float innerMask = smoothstep(innerRadius - _GlowSize, innerRadius + _GlowSize, dist);
                 float ring = outerMask * innerMask;
                 
-                // Calculate angle for segments and progress
+                // Calculate angle for segments
                 float angle = atan2(uv.y, uv.x);
                 angle = (angle + PI) / (2.0 * PI); // Normalize to 0-1 range
                 
@@ -154,22 +152,18 @@ Shader "UI/GlowingCircularRing"
                     }
                 }
                 
-                // Apply progress to symbols
                 symbols *= progressMask;
                 
-                // Combine all effects
                 float fullGlow = glow * progressMask;
                 float backgroundGlow = glow * (1.0 - progressMask) * 0.3;
                 
-                // Intensify the glow where needed
+                // Intensify the glow
                 float enhancedGlow = pow(fullGlow, 0.7) * _GlowIntensity;
                 
-                // Calculate final color
                 fixed4 col = _GlowColor * enhancedGlow * _EmissionMultiplier;
                 col += _MainColor * symbols * _EmissionMultiplier;
                 col += _BackgroundColor * backgroundGlow;
                 
-                // Apply alpha
                 col.a = saturate(enhancedGlow + symbols + backgroundGlow) * i.color.a;
                 
                 return col;
