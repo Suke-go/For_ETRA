@@ -85,12 +85,12 @@ Material:
     - _OuterRadius: 0.48
     - _OuterSize: 0.45
     - _Parallax: 0.02
-    - _Progress: 1
+    - _Progress: 0.634
     - _PulseIntensity: 0
     - _PulseSpeed: 0
     - _Radius: 0.5
     - _RimGlowIntensity: 10
-    - _RotationSpeed: 0.05
+    - _RotationSpeed: 0
     - _SecondaryRadius: 0.42
     - _SegmentCount: 50
     - _SegmentGap: 0.005
